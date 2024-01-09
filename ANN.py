@@ -38,6 +38,7 @@ dataPath = "archive/creditcard.csv"
 dataset = np.loadtxt(dataPath, delimiter=',')
 input = dataset[:,0:30]
 labels = dataset[:,30]
+print(labels)
 
 #Convert to tensor
 input = torch.tensor(input, dtype=torch.float32)
