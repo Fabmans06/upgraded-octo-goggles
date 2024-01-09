@@ -1,0 +1,11 @@
+Dit zijn de commands die ik moet runnen voordat mojo werkt
+Bij jou zijn het dezelfde commands, maar dan met USERNAME = <Jouw username>
+Of misschien werkt het gewoon al
+Als het dat niet doet, kan je gewoon alle commands kopieren en pasten in een keer
+
+USERNAME=anne
+BASHRC=$( [ -f "$HOME/.bash_profile" ] && echo "$HOME/.bash_profile" || echo "$HOME/.bashrc" )
+echo 'export MODULAR_HOME="/home/$USERNAME/.modular"' >> "$BASHRC"
+echo 'export PATH="/home/$USERNAME/.modular/pkg/packages.modular.com_mojo/bin:$PATH"' >> "$BASHRC"
+echo 'export MOJO_PYTHON_LIBRARY="/usr/lib/x86_64-linux-gnu/libpython3.10.so"' >> "$BASHRC"
+source "$BASHRC"
