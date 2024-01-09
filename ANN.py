@@ -24,7 +24,7 @@ dataset = pd.DataFrame(dataset, columns=["step",
 print(dataset)
 
 #Split into input to the network and labels
-output =  pd.DataFrame(dataset, columns=["step",
+inputData =  pd.DataFrame(dataset, columns=["step",
                                          "type",
                                          "amount",
                                          "nameOrig",
@@ -34,7 +34,7 @@ output =  pd.DataFrame(dataset, columns=["step",
                                          "oldbalanceDest",
                                          "newbalanceDest",
                                          ]) 
-input = pd.DataFrame(dataset, columns=["isFraud"])
+Labels = pd.DataFrame(dataset, columns=["isFraud"])
 
 print(output)
 print(input)
