@@ -42,3 +42,15 @@ print(input)
 #Convert to tensor
 input = torch.tensor(input, dtype=torch.float32)
 output = torch.tensor(output, dtype=torch.float32).reshape(-1, 1)
+
+model = nn.Sequential(
+    nn.Linear(9, 16),
+    nn.ReLU(),
+    nn.Linear(16, 32),
+    nn.ReLU(),
+    nn.Linear(32, 16),
+    nn.ReLU(),
+    nn.Linear(16, 8),
+    nn.ReLU(),
+    nn.Linear(8, 1),
+    nn.Sigmoid())
