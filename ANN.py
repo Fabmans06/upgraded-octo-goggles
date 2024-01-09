@@ -2,7 +2,7 @@
 import numpy as np
 import torch
 import torch.nn as nn
-import torch.optim as optim
+import torch.optim as optimizers
 import pandas as pd
 
 #Path to csv file
@@ -36,12 +36,12 @@ inputData =  pd.DataFrame(dataset, columns=["step",
                                          ]) 
 Labels = pd.DataFrame(dataset, columns=["isFraud"])
 
-print(output)
+print(Labels)
 print(input)
 
 #Convert to tensor
 input = torch.tensor(input, dtype=torch.float32)
-output = torch.tensor(output, dtype=torch.float32).reshape(-1, 1)
+output = torch.tensor(Labels, dtype=torch.float32).reshape(-1, 1)
 
 model = nn.Sequential(
     nn.Linear(9, 16),
@@ -56,7 +56,7 @@ model = nn.Sequential(
     nn.Sigmoid())
 
 loss_fn = nn.BCELoss()  #Binary cross entropy loss
-optimizer = optim.Adam(model.parameters(), lr=0.001)
+optimizer = optimizers.Adam(model.parameters(), lr=0.001)
 
 n_epochs = 15
 batch_size = 150
@@ -64,9 +64,9 @@ batch_size = 150
 for epoch in range(n_epochs):
     for i in range(0, len(input), batch_size):
         inputBatch = input[i:i+batch_size]
-        output_prediction = model(inputbatch)
-        outputbatch = output[i:i+batch_size]
-        loss = loss_fn(output_pred, outputbatch)
+        output_prediction = model(inputBatch)
+        outputBatch = output[i:i+batch_size]
+        loss = loss_fn(output_prediction, outputBatch)
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
