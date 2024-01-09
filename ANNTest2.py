@@ -2,14 +2,17 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import torch.cuda as cuda
 
+print(torch.cuda.is_available())
 # load the dataset, split into input (X) and output (y) variables
+cuda = torch.device('cuda')
 dataset = np.loadtxt('archive/creditcard.csv', delimiter=',')
 X = dataset[:,0:10]
 y = dataset[:,10]
 
-X = torch.tensor(X, dtype=torch.float32)
-y = torch.tensor(y, dtype=torch.float32).reshape(-1, 1)
+X = torch.tensor(X, dtype=torch.float32, device=cuda)
+y = torch.tensor(y, dtype=torch.float32, device=cuda).reshape(-1, 1)
 
 # define the model
 model = nn.Sequential(
@@ -34,7 +37,7 @@ optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 n_epochs = 100
 batch_size = 100
-
+#TODO: Fix training, testing, and validation cycle
 for epoch in range(n_epochs):
     for i in range(0, len(X), batch_size):
         Xbatch = X[i:i+batch_size]
@@ -51,3 +54,7 @@ with torch.no_grad():
     y_pred = model(X)
 accuracy = (y_pred.round() == y).float().mean()
 print(f"Accuracy {accuracy}")
+
+#Continue next:
+#https://pytorch.org/tutorials/beginner/basics/buildmodel_tutorial.html 
+#https://www.datacamp.com/tutorial/pytorch-tutorial-building-a-simple-neural-network-from-scratch
