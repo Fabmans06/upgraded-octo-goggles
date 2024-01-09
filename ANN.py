@@ -54,3 +54,20 @@ model = nn.Sequential(
     nn.ReLU(),
     nn.Linear(8, 1),
     nn.Sigmoid())
+
+loss_fn = nn.BCELoss()  #Binary cross entropy loss
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+
+n_epochs = 15
+batch_size = 150
+
+for epoch in range(n_epochs):
+    for i in range(0, len(input), batch_size):
+        inputBatch = input[i:i+batch_size]
+        output_prediction = model(inputbatch)
+        outputbatch = output[i:i+batch_size]
+        loss = loss_fn(output_pred, outputbatch)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+    print(f'Finished epoch {epoch}, latest loss {loss}')
