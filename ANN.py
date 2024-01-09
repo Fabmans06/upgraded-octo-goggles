@@ -36,8 +36,8 @@ dataPath = "archive/creditcard.csv"
 
 # load the dataset, split into input (X) and output (y) variables
 dataset = np.loadtxt(dataPath, delimiter=',')
-input = dataset[:,0:10]
-labels = dataset[:,10]
+input = dataset[:,0:30]
+labels = dataset[:,30]
 
 #Convert to tensor
 input = torch.tensor(input, dtype=torch.float32)
@@ -47,6 +47,8 @@ model = nn.Sequential(
     nn.Linear(30, 64),
     nn.ReLU(),
     nn.Linear(64, 128),
+    nn.ReLU(),
+    nn.Linear(128, 64),
     nn.ReLU(),
     nn.Linear(64, 32),
     nn.ReLU(),
@@ -71,8 +73,8 @@ for epoch in range(n_epochs):
     for i in range(0, len(input), batch_size):
         inputBatch = input[i:i+batch_size]
         output_prediction = model(inputBatch)
-        outputBatch = labels[i:i+batch_size]
-        loss = loss_fn(output_prediction, outputBatch)
+        labelBatch = labels[i:i+batch_size]
+        loss = loss_fn(output_prediction, labelBatch)
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
