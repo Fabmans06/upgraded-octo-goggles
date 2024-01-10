@@ -7,20 +7,24 @@ import torch.nn.functional as f
 from torch.utils.data import Dataloader, TensorDataset, Dataset, random_split
 import pytorch_lightning as L
 
-csv_file_path = ""
+csv_file_path = "" #Set file path to dataset
 BATCH_SIZE = 256 if torch.cuda.is_available() else 64
 NUM_WORKERS = int(os.cpu_count()/2)
+MAX_EPOCHS = 5 #Temporarily low for testing purposes
+LATENT_DIM = 10
+LEARNING_RATE = 0.002 #Can be tinkered with
+
 
 class Data(Dataset):
     def __init__(self, csv_file):
-        self.data = pd.read(csv_file, delimiter=",")
+        self.data = pd.read(csv_file, delimiter=",") 
         
         
     #Needs to return tensor of input data
     def __getitem__(self, index):
-    #Load data
+        pass
     #Convert data to tensor
-    return #Return tensor
+    #Return tensor
     
 class DataModule(L.LightningDataModule):
     def __init__(
@@ -43,13 +47,17 @@ class DataModule(L.LightningDataModule):
         val_size = int(10)
         test_size = int(10)
         self.train_dataset, self.val_dataset, self.test_dataset = random_split(dataset[train_size, val_size, test_size])
+
+
+    def train_dataloader(self):
+        return Dataloader(self.train_dataset, batch_size=self.batch_size, shuffle=True)
+
+    def val_dataloader(self):
+        return Dataloader(self.val_dataset, batch_size=self.batch_size, shuffle=True)
+
+    def test_dataloader(self):
+        return Dataloader(self.test_dataset, batch_size=self.batch_size, shuffle=True)
         
-        def train_dataloader(self):
-            return Dataloader(self.train_dataset, batch_size=self.batch_size, shuffle=True)
-        
-        def val_dataloader(self):
-            
-        def test_dataloader(self):
     
 class ANN(nn.Module):
     def __init__(self, latent_dim, shape):
@@ -74,7 +82,7 @@ class ANN(nn.Module):
 class Training(L.LightningModule):
     def __init__(
         self, 
-        latent_dim: int = ,
+        latent_dim: int = LATENT_DIM,
         batch_size: int = BATCH_SIZE,
         **kwargs,
     ):
@@ -100,19 +108,23 @@ class Training(L.LightningModule):
             optimizer.step()
             optimizer.zero_grad()
             
-        def validation_step(self, batch)
+        def validation_step(self, batch):
+            #Need to figure this out
+            pass
             
         def configure_optimizers(self):
-            lr = 
-            opt = torch.optim.Adam(self.ann.parameters(), lr=lr, betas=)
+            lr = LEARNING_RATE
+            
+            #https://www.kdnuggets.com/2022/12/tuning-adam-optimizer-parameters-pytorch.html
+            opt = torch.optim.Adam(self.ann.parameters(), lr=lr)
             return[opt], []
 
 def main():
     dm = DataModule(csv_file_path)
-    model = Training(latent_dim=)
+    model = Training(latent_dim=LATENT_DIM)
     trainer = L.trainer(
         accelerator = "auto",
-        devices = "1"
-        max_epochs = 5,
+        devices = "1",
+        max_epochs = MAX_EPOCHS
     )
     trainer.fit(model, dm)         
