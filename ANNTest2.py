@@ -3,10 +3,12 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.cuda as cuda
+import os
 
-print(torch.cuda.is_available())
+BATCH_SIZE = 256 if torch.cuda.is_available() else 64
+NUM_WORKERS = int(os.cpu_count()/2)
 # load the dataset, split into input (X) and output (y) variables
-cuda = torch.device('cuda')
+
 dataset = np.loadtxt('archive/creditcard.csv', delimiter=',')
 X = dataset[:,0:10]
 y = dataset[:,10]
