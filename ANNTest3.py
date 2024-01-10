@@ -7,7 +7,7 @@ import torch.nn.functional as f
 from torch.utils.data import Dataloader, TensorDataset, Dataset, random_split
 import pytorch_lightning as L
 
-csv_file_path = "" #Set file path to dataset
+csv_file_path = "/archive/DatsetFraud.csv" #Set file path to dataset
 BATCH_SIZE = 256 if torch.cuda.is_available() else 64
 NUM_WORKERS = int(os.cpu_count()/2)
 MAX_EPOCHS = 5 #Temporarily low for testing purposes
@@ -22,9 +22,14 @@ class Data(Dataset):
         
     #Needs to return tensor of input data
     def __getitem__(self, index):
-        pass
-    #Convert data to tensor
-    #Return tensor
+        #Filter out only input data
+        self.data = pd.DataFrame(self.data, columns=["step", "type", "amount", "nameOrig", "oldbalanceOrig", "newbalanceOrig", "nameDest", "oldbalanceDest", "newbalanceDest", ])
+        
+        #Convert data to tensor
+        self.data_tensor = torch.tensor(self.data.values) 
+        
+        #Return tensor
+        return self.data_tensor
     
 class DataModule(L.LightningDataModule):
     def __init__(
@@ -38,6 +43,7 @@ class DataModule(L.LightningDataModule):
         self.num_workers = num_workers
         self.csv_file = csv_file
         
+    #This function needs to exist, and exists to download data. Our data however, is already downloaded
     def prepare_data(self):
         pass
     
@@ -96,12 +102,13 @@ class Training(L.LightningModule):
             return self.ann(z)
         
         def loss(self, y_hat ,y):
-            return f.log_cross_entropy(y_hat, y)
+            return f.binary_cross_entropy(y_hat, y)
         
         def training_step(self, batch):
             optimizer = self.optimizers()
-            data = 
-            labels = 
+            dataset = pd.read_csv(dataPath)
+            data = pd.DataFrame(dataset, columns=["step", "type", "amount", "nameOrig", "oldbalanceOrig", "newbalanceOrig", "nameDest", "oldbalanceDest", "newbalanceDest", ]) 
+            labels = pd.DataFrame(dataset, columns=["isFraud"])
             loss = self.loss(self.ann(data), labels)
             self.log("loss", loss, prog_bar=True)
             self.manual_backward(loss)
